@@ -1,0 +1,52 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String    @id @default(uuid())
+  email               String    @unique
+  encryptedPassword   String    @map("encrypted_password")
+  firstName           String?   @map("first_name")
+  lastName            String?   @map("last_name")
+  phone               String?   @map("phone")
+  role                Role      @default(USER)
+  isEmailConfirmed    Boolean?  @default(false) @map("is_email_confirmed")
+  resetPasswordToken  String?   @unique @map("reset_password_token")
+  refreshToken        String?   @unique @map("refresh_token")
+  resetPasswordSentAt DateTime? @map("reset_password_sent_at")
+  rememberCreatedAt   DateTime? @map("remember_created_at")
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
+
+  orders Order[]
+}
+
+model Order {
+  id          String   @id @default(uuid())
+  productName String   @map("product_name")
+  price       Float
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+enum Role {
+  ADMIN
+  USER
+}
