@@ -1,7 +1,8 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { z } from 'zod';
+import { createZodDto } from 'nestjs-zod';
 
-export class RefreshTokenDto {
-  @IsString()
-  @IsNotEmpty()
-  token: string;
-}
+export const RefreshTokenSchema = z.object({
+  token: z.string().min(1, 'Refresh token is required'),
+});
+
+export class RefreshTokenDto extends createZodDto(RefreshTokenSchema) {}

@@ -197,4 +197,21 @@ export class AuthService {
   protected normalizeEmail(email: string): string {
     return (email || '').toLowerCase().trim();
   }
+
+  async getMe(email: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { email: this.normalizeEmail(email) },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { encryptedPassword, refreshToken, ...safeUser } = user;
+
+    console.log('user ', safeUser);
+
+    return safeUser;
+  }
 }

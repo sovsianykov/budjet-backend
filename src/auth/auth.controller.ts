@@ -5,8 +5,9 @@ import {
   Get,
   Post,
   UseGuards,
+  Request,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { AuthService, JwtPayload } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { User } from '../generated/prisma';
@@ -14,7 +15,7 @@ import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { LogoutDto } from './dto/logout.dto';
 import { JwtAuthGuard } from './jwt.auth.guard';
 
-@Controller('/')
+@Controller('/auth')
 export class AuthController {
   constructor(private readonly auth: AuthService) {}
 
@@ -53,7 +54,12 @@ export class AuthController {
     if (!email) {
       throw new BadRequestException('Email is required');
     }
-
     return this.auth.logout(email);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  me(@Request() req: Request & { user: JwtPayload }) {
+    return this.auth.getMe(req.user.email);
   }
 }
