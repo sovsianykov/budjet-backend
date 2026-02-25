@@ -11,26 +11,44 @@ import { CreateTransactionItemDto } from './dto/create-transaction-item.dto';
 @Injectable()
 export class TransactionsService {
   constructor(private readonly prisma: PrismaService) {}
-
   // Create a transaction with validation
   async create(dto: CreateTransactionDto) {
     const user = await this.prisma.user.findUnique({
       where: { id: dto.userId },
     });
+
     if (!user) {
       throw new NotFoundException(`User with ID ${dto.userId} not found`);
     }
 
-    // Проверка существования всех продуктов
-    const productIds = dto.items.map((item) => item.productId);
+    // 🔹 merge duplicate products (sum quantities)
+    const mergedItemsMap = new Map<string, number>();
+
+    for (const item of dto.items) {
+      const currentQty = mergedItemsMap.get(item.productId) ?? 0;
+      mergedItemsMap.set(item.productId, currentQty + item.quantity);
+    }
+
+    const mergedItems = Array.from(mergedItemsMap.entries()).map(
+      ([productId, quantity]) => ({
+        productId,
+        quantity,
+      }),
+    );
+
+    // 🔹 check product existence
+    const productIds = mergedItems.map((item) => item.productId);
+
     const products = await this.prisma.product.findMany({
       where: { id: { in: productIds } },
     });
 
     const existingProductIds = products.map((p) => p.id);
+
     const missingProducts = productIds.filter(
       (id) => !existingProductIds.includes(id),
     );
+
     if (missingProducts.length > 0) {
       throw new NotFoundException(
         `Products not found with IDs: ${missingProducts.join(', ')}`,
@@ -42,14 +60,12 @@ export class TransactionsService {
         data: {
           userId: dto.userId,
           items: {
-            create: dto.items.map((item) => ({
-              productId: item.productId,
-              quantity: item.quantity,
-            })),
+            create: mergedItems,
           },
         },
         include: {
           items: { include: { product: true } },
+          user: true,
         },
       });
     } catch (error) {

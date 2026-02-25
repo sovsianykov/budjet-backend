@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service'; // путь к твоему PrismaService
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -7,7 +7,15 @@ import { UpdateProductDto } from './dto/update-product.dto';
 export class ProductsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(createProductDto: CreateProductDto) {
+  async create(createProductDto: CreateProductDto) {
+    const existing = await this.prisma.product.findUnique({
+      where: { productName: createProductDto.productName },
+    });
+
+    if (existing) {
+      throw new Error('Product with this name already exists');
+    }
+
     return this.prisma.product.create({
       data: createProductDto,
     });
@@ -30,7 +38,17 @@ export class ProductsService {
     });
   }
 
-  remove(id: string) {
+  async remove(id: string) {
+    const hasTransactions = await this.prisma.transactionItem.count({
+      where: { productId: id },
+    });
+
+    if (hasTransactions > 0) {
+      throw new ConflictException(
+        'Cannot delete product because it is used in transactions',
+      );
+    }
+
     return this.prisma.product.delete({
       where: { id },
     });
