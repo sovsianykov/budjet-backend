@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: budjet-backend
+    env: node
+    plan: free
+    branch: main
+    buildCommand: "yarn install && yarn build"
+    startCommand: "yarn start:prod"
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: budjet-db
+          property: connectionString
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        value: "your_jwt_secret_here"
+      - key: JWT_EXPIRATION_TIME
+        value: "48h"
+      - key: JWT_REFRESH_TOKEN_SECRET
+        value: "your_refresh_token_secret_here"
+
+databases:
+  - name: budjet-db
+    engine: postgresql
+    version: "15"
+    plan: free
