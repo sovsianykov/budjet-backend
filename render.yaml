@@ -20,7 +20,7 @@ services:
         value: "48h"
       - key: JWT_REFRESH_TOKEN_SECRET
         value: "your_refresh_token_secret_here"
-    runtime: node22
+    runtime: node
 
 databases:
   - name: budjet-db
