@@ -20,9 +20,8 @@ services:
         value: "48h"
       - key: JWT_REFRESH_TOKEN_SECRET
         value: "your_refresh_token_secret_here"
+    runtime: node22
 
 databases:
   - name: budjet-db
-    engine: postgresql
-    version: "15"
     plan: free
