@@ -4,8 +4,8 @@ services:
     runtime: node
     plan: free
     branch: main
-    buildCommand: "yarn install && npx nest build"
-    startCommand: "yarn start:prod"
+    buildCommand: "npm install && npm nest build"
+    startCommand: "npm start:prod"
     autoDeploy: true
     envVars:
       - key: DATABASE_URL
