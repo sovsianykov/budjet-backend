@@ -1,7 +1,7 @@
 services:
   - type: web
     name: budjet-backend
-    env: node
+    runtime: node
     plan: free
     branch: main
     buildCommand: "yarn install && npx nest build"
@@ -20,9 +20,7 @@ services:
         value: "48h"
       - key: JWT_REFRESH_TOKEN_SECRET
         value: "your_refresh_token_secret_here"
-    runtime: node
 
 databases:
   - name: budjet-db
     plan: free
-
