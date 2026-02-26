@@ -4,56 +4,41 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Observable } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
-import { JwtPayload } from './auth.service';
 import { Request } from 'express';
 import { config } from '../config';
+import { JwtPayload } from './auth.service';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
   constructor(private readonly jwtService: JwtService) {}
 
-  canActivate(
-    context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
-    const req: Request & { user?: JwtPayload } = context
+  canActivate(context: ExecutionContext): boolean {
+    const req = context
       .switchToHttp()
-      .getRequest();
+      .getRequest<Request & { user?: JwtPayload }>();
 
     const authHeader = req.headers.authorization;
-    console.log('AUTH HEADER:', authHeader);
+
+    if (!authHeader) {
+      throw new UnauthorizedException('Authorization header missing');
+    }
+
+    const [type, token] = authHeader.split(' ');
+
+    if (type !== 'Bearer' || !token) {
+      throw new UnauthorizedException('Invalid authorization format');
+    }
+
     try {
-      const authHeader: string | undefined = req.headers.authorization;
-
-      if (!authHeader) {
-        throw new UnauthorizedException({
-          message: 'Authorization header missing.',
-        });
-      }
-
-      const [bearer, token] = authHeader.split(' ');
-
-      if (bearer !== 'Bearer' || !token) {
-        throw new UnauthorizedException({
-          message: 'User not authorized. Message from guard',
-        });
-      }
-
-      const user: JwtPayload = this.jwtService.verify<JwtPayload>(token, {
+      const payload = this.jwtService.verify<JwtPayload>(token, {
         secret: config.jwtAccessTokenSecret,
       });
 
-      req.user = user;
-
+      req.user = payload;
       return true;
-    } catch (e: unknown) {
-      if (e instanceof Error) {
-        console.error(e.message);
-      }
-      throw new UnauthorizedException({
-        message: 'That User is not authorized.',
-      });
+    } catch {
+      throw new UnauthorizedException('Invalid or expired token');
     }
   }
 }

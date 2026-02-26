@@ -5,9 +5,9 @@ import {
   Get,
   Post,
   UseGuards,
-  Request,
+  Req,
 } from '@nestjs/common';
-import { AuthService, JwtPayload } from './auth.service';
+import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { User } from '../generated/prisma';
@@ -25,17 +25,17 @@ export class AuthController {
     return this.auth.getAllUsers();
   }
 
-  @Post('sign_up')
+  @Post('/sign_up')
   register(@Body() registerDto: RegisterDto) {
     return this.auth.register(registerDto);
   }
 
-  @Post('sign_in')
+  @Post('/sign_in')
   login(@Body() loginDto: LoginDto) {
     return this.auth.login(loginDto);
   }
 
-  @Post('refresh')
+  @Post('/refresh')
   async refresh(@Body() body: RefreshTokenDto) {
     const { token } = body;
 
@@ -47,7 +47,7 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('logout')
+  @Post('/logout')
   async logout(@Body() body: LogoutDto) {
     const { email } = body;
 
@@ -57,9 +57,9 @@ export class AuthController {
     return this.auth.logout(email);
   }
 
+  @Get('/me')
   @UseGuards(JwtAuthGuard)
-  @Get('me')
-  me(@Request() req: Request & { user: JwtPayload }) {
-    return this.auth.getMe(req.user.email);
+  getMe(@Req() req) {
+    return this.auth.getMe(req.user.email as string);
   }
 }

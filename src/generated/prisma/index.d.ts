@@ -25,7 +25,6 @@ export type UserPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultAr
     firstName: string | null
     lastName: string | null
     phone: string | null
-    role: Role
     isEmailConfirmed: boolean | null
     resetPasswordToken: string | null
     refreshToken: string | null
@@ -33,6 +32,7 @@ export type UserPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultAr
     rememberCreatedAt: Date | null
     createdAt: Date
     updatedAt: Date
+    role: Role
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -66,8 +66,8 @@ export type Order = runtime.Types.DefaultSelection<OrderPayload>
 export type TransactionItemPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
   name: "TransactionItem"
   objects: {
-    transaction: TransactionPayload<ExtArgs>
     product: ProductPayload<ExtArgs>
+    transaction: TransactionPayload<ExtArgs>
   }
   scalars: $Extensions.GetResult<{
     id: string
@@ -1456,7 +1456,6 @@ export namespace Prisma {
     firstName: string | null
     lastName: string | null
     phone: string | null
-    role: Role | null
     isEmailConfirmed: boolean | null
     resetPasswordToken: string | null
     refreshToken: string | null
@@ -1464,6 +1463,7 @@ export namespace Prisma {
     rememberCreatedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
+    role: Role | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -1473,7 +1473,6 @@ export namespace Prisma {
     firstName: string | null
     lastName: string | null
     phone: string | null
-    role: Role | null
     isEmailConfirmed: boolean | null
     resetPasswordToken: string | null
     refreshToken: string | null
@@ -1481,6 +1480,7 @@ export namespace Prisma {
     rememberCreatedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
+    role: Role | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -1490,7 +1490,6 @@ export namespace Prisma {
     firstName: number
     lastName: number
     phone: number
-    role: number
     isEmailConfirmed: number
     resetPasswordToken: number
     refreshToken: number
@@ -1498,6 +1497,7 @@ export namespace Prisma {
     rememberCreatedAt: number
     createdAt: number
     updatedAt: number
+    role: number
     _all: number
   }
 
@@ -1509,7 +1509,6 @@ export namespace Prisma {
     firstName?: true
     lastName?: true
     phone?: true
-    role?: true
     isEmailConfirmed?: true
     resetPasswordToken?: true
     refreshToken?: true
@@ -1517,6 +1516,7 @@ export namespace Prisma {
     rememberCreatedAt?: true
     createdAt?: true
     updatedAt?: true
+    role?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -1526,7 +1526,6 @@ export namespace Prisma {
     firstName?: true
     lastName?: true
     phone?: true
-    role?: true
     isEmailConfirmed?: true
     resetPasswordToken?: true
     refreshToken?: true
@@ -1534,6 +1533,7 @@ export namespace Prisma {
     rememberCreatedAt?: true
     createdAt?: true
     updatedAt?: true
+    role?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -1543,7 +1543,6 @@ export namespace Prisma {
     firstName?: true
     lastName?: true
     phone?: true
-    role?: true
     isEmailConfirmed?: true
     resetPasswordToken?: true
     refreshToken?: true
@@ -1551,6 +1550,7 @@ export namespace Prisma {
     rememberCreatedAt?: true
     createdAt?: true
     updatedAt?: true
+    role?: true
     _all?: true
   }
 
@@ -1634,7 +1634,6 @@ export namespace Prisma {
     firstName: string | null
     lastName: string | null
     phone: string | null
-    role: Role
     isEmailConfirmed: boolean | null
     resetPasswordToken: string | null
     refreshToken: string | null
@@ -1642,6 +1641,7 @@ export namespace Prisma {
     rememberCreatedAt: Date | null
     createdAt: Date
     updatedAt: Date
+    role: Role
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -1668,7 +1668,6 @@ export namespace Prisma {
     firstName?: boolean
     lastName?: boolean
     phone?: boolean
-    role?: boolean
     isEmailConfirmed?: boolean
     resetPasswordToken?: boolean
     refreshToken?: boolean
@@ -1676,6 +1675,7 @@ export namespace Prisma {
     rememberCreatedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    role?: boolean
     orders?: boolean | User$ordersArgs<ExtArgs>
     transactions?: boolean | User$transactionsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeArgs<ExtArgs>
@@ -1688,7 +1688,6 @@ export namespace Prisma {
     firstName?: boolean
     lastName?: boolean
     phone?: boolean
-    role?: boolean
     isEmailConfirmed?: boolean
     resetPasswordToken?: boolean
     refreshToken?: boolean
@@ -1696,6 +1695,7 @@ export namespace Prisma {
     rememberCreatedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    role?: boolean
   }
 
   export type UserInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
@@ -3650,8 +3650,8 @@ export namespace Prisma {
     transactionId?: boolean
     productId?: boolean
     quantity?: boolean
-    transaction?: boolean | TransactionArgs<ExtArgs>
     product?: boolean | ProductArgs<ExtArgs>
+    transaction?: boolean | TransactionArgs<ExtArgs>
   }, ExtArgs["result"]["transactionItem"]>
 
   export type TransactionItemSelectScalar = {
@@ -3662,8 +3662,8 @@ export namespace Prisma {
   }
 
   export type TransactionItemInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    transaction?: boolean | TransactionArgs<ExtArgs>
     product?: boolean | ProductArgs<ExtArgs>
+    transaction?: boolean | TransactionArgs<ExtArgs>
   }
 
 
@@ -4036,9 +4036,9 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: 'PrismaPromise';
     constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
-    transaction<T extends TransactionArgs<ExtArgs> = {}>(args?: Subset<T, TransactionArgs<ExtArgs>>): Prisma__TransactionClient<$Types.GetResult<TransactionPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
-
     product<T extends ProductArgs<ExtArgs> = {}>(args?: Subset<T, ProductArgs<ExtArgs>>): Prisma__ProductClient<$Types.GetResult<ProductPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
+
+    transaction<T extends TransactionArgs<ExtArgs> = {}>(args?: Subset<T, TransactionArgs<ExtArgs>>): Prisma__TransactionClient<$Types.GetResult<TransactionPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
 
     private get _document();
     /**
@@ -6355,14 +6355,14 @@ export namespace Prisma {
     firstName: 'firstName',
     lastName: 'lastName',
     phone: 'phone',
-    role: 'role',
     isEmailConfirmed: 'isEmailConfirmed',
     resetPasswordToken: 'resetPasswordToken',
     refreshToken: 'refreshToken',
     resetPasswordSentAt: 'resetPasswordSentAt',
     rememberCreatedAt: 'rememberCreatedAt',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    role: 'role'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -6450,7 +6450,6 @@ export namespace Prisma {
     firstName?: StringNullableFilter | string | null
     lastName?: StringNullableFilter | string | null
     phone?: StringNullableFilter | string | null
-    role?: EnumRoleFilter | Role
     isEmailConfirmed?: BoolNullableFilter | boolean | null
     resetPasswordToken?: StringNullableFilter | string | null
     refreshToken?: StringNullableFilter | string | null
@@ -6458,6 +6457,7 @@ export namespace Prisma {
     rememberCreatedAt?: DateTimeNullableFilter | Date | string | null
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
+    role?: EnumRoleFilter | Role
     orders?: OrderListRelationFilter
     transactions?: TransactionListRelationFilter
   }
@@ -6469,7 +6469,6 @@ export namespace Prisma {
     firstName?: SortOrderInput | SortOrder
     lastName?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
-    role?: SortOrder
     isEmailConfirmed?: SortOrderInput | SortOrder
     resetPasswordToken?: SortOrderInput | SortOrder
     refreshToken?: SortOrderInput | SortOrder
@@ -6477,6 +6476,7 @@ export namespace Prisma {
     rememberCreatedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    role?: SortOrder
     orders?: OrderOrderByRelationAggregateInput
     transactions?: TransactionOrderByRelationAggregateInput
   }
@@ -6495,7 +6495,6 @@ export namespace Prisma {
     firstName?: SortOrderInput | SortOrder
     lastName?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
-    role?: SortOrder
     isEmailConfirmed?: SortOrderInput | SortOrder
     resetPasswordToken?: SortOrderInput | SortOrder
     refreshToken?: SortOrderInput | SortOrder
@@ -6503,6 +6502,7 @@ export namespace Prisma {
     rememberCreatedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    role?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -6518,7 +6518,6 @@ export namespace Prisma {
     firstName?: StringNullableWithAggregatesFilter | string | null
     lastName?: StringNullableWithAggregatesFilter | string | null
     phone?: StringNullableWithAggregatesFilter | string | null
-    role?: EnumRoleWithAggregatesFilter | Role
     isEmailConfirmed?: BoolNullableWithAggregatesFilter | boolean | null
     resetPasswordToken?: StringNullableWithAggregatesFilter | string | null
     refreshToken?: StringNullableWithAggregatesFilter | string | null
@@ -6526,6 +6525,7 @@ export namespace Prisma {
     rememberCreatedAt?: DateTimeNullableWithAggregatesFilter | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter | Date | string
     updatedAt?: DateTimeWithAggregatesFilter | Date | string
+    role?: EnumRoleWithAggregatesFilter | Role
   }
 
   export type OrderWhereInput = {
@@ -6589,8 +6589,8 @@ export namespace Prisma {
     transactionId?: StringFilter | string
     productId?: StringFilter | string
     quantity?: IntFilter | number
-    transaction?: XOR<TransactionRelationFilter, TransactionWhereInput>
     product?: XOR<ProductRelationFilter, ProductWhereInput>
+    transaction?: XOR<TransactionRelationFilter, TransactionWhereInput>
   }
 
   export type TransactionItemOrderByWithRelationInput = {
@@ -6598,8 +6598,8 @@ export namespace Prisma {
     transactionId?: SortOrder
     productId?: SortOrder
     quantity?: SortOrder
-    transaction?: TransactionOrderByWithRelationInput
     product?: ProductOrderByWithRelationInput
+    transaction?: TransactionOrderByWithRelationInput
   }
 
   export type TransactionItemWhereUniqueInput = {
@@ -6731,7 +6731,6 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     phone?: string | null
-    role?: Role
     isEmailConfirmed?: boolean | null
     resetPasswordToken?: string | null
     refreshToken?: string | null
@@ -6739,6 +6738,7 @@ export namespace Prisma {
     rememberCreatedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    role?: Role
     orders?: OrderCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
   }
@@ -6750,7 +6750,6 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     phone?: string | null
-    role?: Role
     isEmailConfirmed?: boolean | null
     resetPasswordToken?: string | null
     refreshToken?: string | null
@@ -6758,6 +6757,7 @@ export namespace Prisma {
     rememberCreatedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    role?: Role
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
   }
@@ -6769,7 +6769,6 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumRoleFieldUpdateOperationsInput | Role
     isEmailConfirmed?: NullableBoolFieldUpdateOperationsInput | boolean | null
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
     refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -6777,6 +6776,7 @@ export namespace Prisma {
     rememberCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    role?: EnumRoleFieldUpdateOperationsInput | Role
     orders?: OrderUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
   }
@@ -6788,7 +6788,6 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumRoleFieldUpdateOperationsInput | Role
     isEmailConfirmed?: NullableBoolFieldUpdateOperationsInput | boolean | null
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
     refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -6796,6 +6795,7 @@ export namespace Prisma {
     rememberCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    role?: EnumRoleFieldUpdateOperationsInput | Role
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -6807,7 +6807,6 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     phone?: string | null
-    role?: Role
     isEmailConfirmed?: boolean | null
     resetPasswordToken?: string | null
     refreshToken?: string | null
@@ -6815,6 +6814,7 @@ export namespace Prisma {
     rememberCreatedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    role?: Role
   }
 
   export type UserUpdateManyMutationInput = {
@@ -6824,7 +6824,6 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumRoleFieldUpdateOperationsInput | Role
     isEmailConfirmed?: NullableBoolFieldUpdateOperationsInput | boolean | null
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
     refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -6832,6 +6831,7 @@ export namespace Prisma {
     rememberCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    role?: EnumRoleFieldUpdateOperationsInput | Role
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -6841,7 +6841,6 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumRoleFieldUpdateOperationsInput | Role
     isEmailConfirmed?: NullableBoolFieldUpdateOperationsInput | boolean | null
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
     refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -6849,6 +6848,7 @@ export namespace Prisma {
     rememberCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    role?: EnumRoleFieldUpdateOperationsInput | Role
   }
 
   export type OrderCreateInput = {
@@ -6916,8 +6916,8 @@ export namespace Prisma {
   export type TransactionItemCreateInput = {
     id?: string
     quantity?: number
-    transaction: TransactionCreateNestedOneWithoutItemsInput
     product: ProductCreateNestedOneWithoutTransactionItemsInput
+    transaction: TransactionCreateNestedOneWithoutItemsInput
   }
 
   export type TransactionItemUncheckedCreateInput = {
@@ -6930,8 +6930,8 @@ export namespace Prisma {
   export type TransactionItemUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
-    transaction?: TransactionUpdateOneRequiredWithoutItemsNestedInput
     product?: ProductUpdateOneRequiredWithoutTransactionItemsNestedInput
+    transaction?: TransactionUpdateOneRequiredWithoutItemsNestedInput
   }
 
   export type TransactionItemUncheckedUpdateInput = {
@@ -7102,13 +7102,6 @@ export namespace Prisma {
     not?: NestedStringNullableFilter | string | null
   }
 
-  export type EnumRoleFilter = {
-    equals?: Role
-    in?: Enumerable<Role>
-    notIn?: Enumerable<Role>
-    not?: NestedEnumRoleFilter | Role
-  }
-
   export type BoolNullableFilter = {
     equals?: boolean | null
     not?: NestedBoolNullableFilter | boolean | null
@@ -7134,6 +7127,13 @@ export namespace Prisma {
     gt?: Date | string
     gte?: Date | string
     not?: NestedDateTimeFilter | Date | string
+  }
+
+  export type EnumRoleFilter = {
+    equals?: Role
+    in?: Enumerable<Role>
+    notIn?: Enumerable<Role>
+    not?: NestedEnumRoleFilter | Role
   }
 
   export type OrderListRelationFilter = {
@@ -7168,7 +7168,6 @@ export namespace Prisma {
     firstName?: SortOrder
     lastName?: SortOrder
     phone?: SortOrder
-    role?: SortOrder
     isEmailConfirmed?: SortOrder
     resetPasswordToken?: SortOrder
     refreshToken?: SortOrder
@@ -7176,6 +7175,7 @@ export namespace Prisma {
     rememberCreatedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    role?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -7185,7 +7185,6 @@ export namespace Prisma {
     firstName?: SortOrder
     lastName?: SortOrder
     phone?: SortOrder
-    role?: SortOrder
     isEmailConfirmed?: SortOrder
     resetPasswordToken?: SortOrder
     refreshToken?: SortOrder
@@ -7193,6 +7192,7 @@ export namespace Prisma {
     rememberCreatedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    role?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -7202,7 +7202,6 @@ export namespace Prisma {
     firstName?: SortOrder
     lastName?: SortOrder
     phone?: SortOrder
-    role?: SortOrder
     isEmailConfirmed?: SortOrder
     resetPasswordToken?: SortOrder
     refreshToken?: SortOrder
@@ -7210,6 +7209,7 @@ export namespace Prisma {
     rememberCreatedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    role?: SortOrder
   }
 
   export type StringWithAggregatesFilter = {
@@ -7248,16 +7248,6 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter
   }
 
-  export type EnumRoleWithAggregatesFilter = {
-    equals?: Role
-    in?: Enumerable<Role>
-    notIn?: Enumerable<Role>
-    not?: NestedEnumRoleWithAggregatesFilter | Role
-    _count?: NestedIntFilter
-    _min?: NestedEnumRoleFilter
-    _max?: NestedEnumRoleFilter
-  }
-
   export type BoolNullableWithAggregatesFilter = {
     equals?: boolean | null
     not?: NestedBoolNullableWithAggregatesFilter | boolean | null
@@ -7292,6 +7282,16 @@ export namespace Prisma {
     _count?: NestedIntFilter
     _min?: NestedDateTimeFilter
     _max?: NestedDateTimeFilter
+  }
+
+  export type EnumRoleWithAggregatesFilter = {
+    equals?: Role
+    in?: Enumerable<Role>
+    notIn?: Enumerable<Role>
+    not?: NestedEnumRoleWithAggregatesFilter | Role
+    _count?: NestedIntFilter
+    _min?: NestedEnumRoleFilter
+    _max?: NestedEnumRoleFilter
   }
 
   export type FloatFilter = {
@@ -7372,14 +7372,14 @@ export namespace Prisma {
     not?: NestedIntFilter | number
   }
 
-  export type TransactionRelationFilter = {
-    is?: TransactionWhereInput | null
-    isNot?: TransactionWhereInput | null
-  }
-
   export type ProductRelationFilter = {
     is?: ProductWhereInput | null
     isNot?: ProductWhereInput | null
+  }
+
+  export type TransactionRelationFilter = {
+    is?: TransactionWhereInput | null
+    isNot?: TransactionWhereInput | null
   }
 
   export type TransactionItemTransactionIdProductIdCompoundUniqueInput = {
@@ -7531,10 +7531,6 @@ export namespace Prisma {
     set?: string | null
   }
 
-  export type EnumRoleFieldUpdateOperationsInput = {
-    set?: Role
-  }
-
   export type NullableBoolFieldUpdateOperationsInput = {
     set?: boolean | null
   }
@@ -7545,6 +7541,10 @@ export namespace Prisma {
 
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
+  }
+
+  export type EnumRoleFieldUpdateOperationsInput = {
+    set?: Role
   }
 
   export type OrderUpdateManyWithoutUserNestedInput = {
@@ -7625,16 +7625,16 @@ export namespace Prisma {
     update?: XOR<UserUpdateWithoutOrdersInput, UserUncheckedUpdateWithoutOrdersInput>
   }
 
-  export type TransactionCreateNestedOneWithoutItemsInput = {
-    create?: XOR<TransactionCreateWithoutItemsInput, TransactionUncheckedCreateWithoutItemsInput>
-    connectOrCreate?: TransactionCreateOrConnectWithoutItemsInput
-    connect?: TransactionWhereUniqueInput
-  }
-
   export type ProductCreateNestedOneWithoutTransactionItemsInput = {
     create?: XOR<ProductCreateWithoutTransactionItemsInput, ProductUncheckedCreateWithoutTransactionItemsInput>
     connectOrCreate?: ProductCreateOrConnectWithoutTransactionItemsInput
     connect?: ProductWhereUniqueInput
+  }
+
+  export type TransactionCreateNestedOneWithoutItemsInput = {
+    create?: XOR<TransactionCreateWithoutItemsInput, TransactionUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: TransactionCreateOrConnectWithoutItemsInput
+    connect?: TransactionWhereUniqueInput
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -7645,20 +7645,20 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type TransactionUpdateOneRequiredWithoutItemsNestedInput = {
-    create?: XOR<TransactionCreateWithoutItemsInput, TransactionUncheckedCreateWithoutItemsInput>
-    connectOrCreate?: TransactionCreateOrConnectWithoutItemsInput
-    upsert?: TransactionUpsertWithoutItemsInput
-    connect?: TransactionWhereUniqueInput
-    update?: XOR<TransactionUpdateWithoutItemsInput, TransactionUncheckedUpdateWithoutItemsInput>
-  }
-
   export type ProductUpdateOneRequiredWithoutTransactionItemsNestedInput = {
     create?: XOR<ProductCreateWithoutTransactionItemsInput, ProductUncheckedCreateWithoutTransactionItemsInput>
     connectOrCreate?: ProductCreateOrConnectWithoutTransactionItemsInput
     upsert?: ProductUpsertWithoutTransactionItemsInput
     connect?: ProductWhereUniqueInput
     update?: XOR<ProductUpdateWithoutTransactionItemsInput, ProductUncheckedUpdateWithoutTransactionItemsInput>
+  }
+
+  export type TransactionUpdateOneRequiredWithoutItemsNestedInput = {
+    create?: XOR<TransactionCreateWithoutItemsInput, TransactionUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: TransactionCreateOrConnectWithoutItemsInput
+    upsert?: TransactionUpsertWithoutItemsInput
+    connect?: TransactionWhereUniqueInput
+    update?: XOR<TransactionUpdateWithoutItemsInput, TransactionUncheckedUpdateWithoutItemsInput>
   }
 
   export type TransactionItemCreateNestedManyWithoutProductInput = {
@@ -7787,13 +7787,6 @@ export namespace Prisma {
     not?: NestedStringNullableFilter | string | null
   }
 
-  export type NestedEnumRoleFilter = {
-    equals?: Role
-    in?: Enumerable<Role>
-    notIn?: Enumerable<Role>
-    not?: NestedEnumRoleFilter | Role
-  }
-
   export type NestedBoolNullableFilter = {
     equals?: boolean | null
     not?: NestedBoolNullableFilter | boolean | null
@@ -7819,6 +7812,13 @@ export namespace Prisma {
     gt?: Date | string
     gte?: Date | string
     not?: NestedDateTimeFilter | Date | string
+  }
+
+  export type NestedEnumRoleFilter = {
+    equals?: Role
+    in?: Enumerable<Role>
+    notIn?: Enumerable<Role>
+    not?: NestedEnumRoleFilter | Role
   }
 
   export type NestedStringWithAggregatesFilter = {
@@ -7877,16 +7877,6 @@ export namespace Prisma {
     not?: NestedIntNullableFilter | number | null
   }
 
-  export type NestedEnumRoleWithAggregatesFilter = {
-    equals?: Role
-    in?: Enumerable<Role>
-    notIn?: Enumerable<Role>
-    not?: NestedEnumRoleWithAggregatesFilter | Role
-    _count?: NestedIntFilter
-    _min?: NestedEnumRoleFilter
-    _max?: NestedEnumRoleFilter
-  }
-
   export type NestedBoolNullableWithAggregatesFilter = {
     equals?: boolean | null
     not?: NestedBoolNullableWithAggregatesFilter | boolean | null
@@ -7921,6 +7911,16 @@ export namespace Prisma {
     _count?: NestedIntFilter
     _min?: NestedDateTimeFilter
     _max?: NestedDateTimeFilter
+  }
+
+  export type NestedEnumRoleWithAggregatesFilter = {
+    equals?: Role
+    in?: Enumerable<Role>
+    notIn?: Enumerable<Role>
+    not?: NestedEnumRoleWithAggregatesFilter | Role
+    _count?: NestedIntFilter
+    _min?: NestedEnumRoleFilter
+    _max?: NestedEnumRoleFilter
   }
 
   export type NestedFloatFilter = {
@@ -8077,7 +8077,6 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     phone?: string | null
-    role?: Role
     isEmailConfirmed?: boolean | null
     resetPasswordToken?: string | null
     refreshToken?: string | null
@@ -8085,6 +8084,7 @@ export namespace Prisma {
     rememberCreatedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    role?: Role
     transactions?: TransactionCreateNestedManyWithoutUserInput
   }
 
@@ -8095,7 +8095,6 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     phone?: string | null
-    role?: Role
     isEmailConfirmed?: boolean | null
     resetPasswordToken?: string | null
     refreshToken?: string | null
@@ -8103,6 +8102,7 @@ export namespace Prisma {
     rememberCreatedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    role?: Role
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -8123,7 +8123,6 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumRoleFieldUpdateOperationsInput | Role
     isEmailConfirmed?: NullableBoolFieldUpdateOperationsInput | boolean | null
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
     refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -8131,6 +8130,7 @@ export namespace Prisma {
     rememberCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    role?: EnumRoleFieldUpdateOperationsInput | Role
     transactions?: TransactionUpdateManyWithoutUserNestedInput
   }
 
@@ -8141,7 +8141,6 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumRoleFieldUpdateOperationsInput | Role
     isEmailConfirmed?: NullableBoolFieldUpdateOperationsInput | boolean | null
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
     refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -8149,26 +8148,8 @@ export namespace Prisma {
     rememberCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    role?: EnumRoleFieldUpdateOperationsInput | Role
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type TransactionCreateWithoutItemsInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutTransactionsInput
-  }
-
-  export type TransactionUncheckedCreateWithoutItemsInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    userId: string
-  }
-
-  export type TransactionCreateOrConnectWithoutItemsInput = {
-    where: TransactionWhereUniqueInput
-    create: XOR<TransactionCreateWithoutItemsInput, TransactionUncheckedCreateWithoutItemsInput>
   }
 
   export type ProductCreateWithoutTransactionItemsInput = {
@@ -8192,23 +8173,23 @@ export namespace Prisma {
     create: XOR<ProductCreateWithoutTransactionItemsInput, ProductUncheckedCreateWithoutTransactionItemsInput>
   }
 
-  export type TransactionUpsertWithoutItemsInput = {
-    update: XOR<TransactionUpdateWithoutItemsInput, TransactionUncheckedUpdateWithoutItemsInput>
+  export type TransactionCreateWithoutItemsInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutTransactionsInput
+  }
+
+  export type TransactionUncheckedCreateWithoutItemsInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    userId: string
+  }
+
+  export type TransactionCreateOrConnectWithoutItemsInput = {
+    where: TransactionWhereUniqueInput
     create: XOR<TransactionCreateWithoutItemsInput, TransactionUncheckedCreateWithoutItemsInput>
-  }
-
-  export type TransactionUpdateWithoutItemsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutTransactionsNestedInput
-  }
-
-  export type TransactionUncheckedUpdateWithoutItemsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    userId?: StringFieldUpdateOperationsInput | string
   }
 
   export type ProductUpsertWithoutTransactionItemsInput = {
@@ -8230,6 +8211,25 @@ export namespace Prisma {
     price?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TransactionUpsertWithoutItemsInput = {
+    update: XOR<TransactionUpdateWithoutItemsInput, TransactionUncheckedUpdateWithoutItemsInput>
+    create: XOR<TransactionCreateWithoutItemsInput, TransactionUncheckedCreateWithoutItemsInput>
+  }
+
+  export type TransactionUpdateWithoutItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutTransactionsNestedInput
+  }
+
+  export type TransactionUncheckedUpdateWithoutItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
   }
 
   export type TransactionItemCreateWithoutProductInput = {
@@ -8287,7 +8287,6 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     phone?: string | null
-    role?: Role
     isEmailConfirmed?: boolean | null
     resetPasswordToken?: string | null
     refreshToken?: string | null
@@ -8295,6 +8294,7 @@ export namespace Prisma {
     rememberCreatedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    role?: Role
     orders?: OrderCreateNestedManyWithoutUserInput
   }
 
@@ -8305,7 +8305,6 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     phone?: string | null
-    role?: Role
     isEmailConfirmed?: boolean | null
     resetPasswordToken?: string | null
     refreshToken?: string | null
@@ -8313,6 +8312,7 @@ export namespace Prisma {
     rememberCreatedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    role?: Role
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -8355,7 +8355,6 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumRoleFieldUpdateOperationsInput | Role
     isEmailConfirmed?: NullableBoolFieldUpdateOperationsInput | boolean | null
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
     refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -8363,6 +8362,7 @@ export namespace Prisma {
     rememberCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    role?: EnumRoleFieldUpdateOperationsInput | Role
     orders?: OrderUpdateManyWithoutUserNestedInput
   }
 
@@ -8373,7 +8373,6 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumRoleFieldUpdateOperationsInput | Role
     isEmailConfirmed?: NullableBoolFieldUpdateOperationsInput | boolean | null
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
     refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -8381,6 +8380,7 @@ export namespace Prisma {
     rememberCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    role?: EnumRoleFieldUpdateOperationsInput | Role
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
   }
 

@@ -148,4 +148,23 @@ export class TransactionsService {
       include: { items: { include: { product: true } }, user: true },
     });
   }
+
+  async deleteAllTransactions() {
+    try {
+      await this.prisma.$transaction(async (tx) => {
+        // First, delete all transaction items to avoid foreign key conflicts
+        await tx.transactionItem.deleteMany();
+
+        // Then, delete all transactions
+        await tx.transaction.deleteMany();
+      });
+
+      console.log(
+        'All transactions and transaction items have been deleted successfully.',
+      );
+    } catch (error) {
+      console.error('Error while deleting transactions:', error);
+      throw new Error('Failed to delete transactions');
+    }
+  }
 }

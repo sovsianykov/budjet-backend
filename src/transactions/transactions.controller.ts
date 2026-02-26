@@ -6,10 +6,14 @@ import {
   Param,
   Body,
   Patch,
+  HttpCode,
+  HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
+import { JwtAuthGuard } from '../auth/jwt.auth.guard';
 
 @Controller('transactions')
 export class TransactionsController {
@@ -42,5 +46,11 @@ export class TransactionsController {
   @Patch(':id')
   update(@Param('id') id: string, @Body() dto: UpdateTransactionDto) {
     return this.transactionsService.updateTransaction(id, dto);
+  }
+
+  @Delete('')
+  @HttpCode(HttpStatus.NO_CONTENT) // 204 status code for successful deletion
+  async deleteAll() {
+    return this.transactionsService.deleteAllTransactions();
   }
 }

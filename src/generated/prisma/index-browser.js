@@ -112,14 +112,14 @@ exports.Prisma.UserScalarFieldEnum = {
   firstName: 'firstName',
   lastName: 'lastName',
   phone: 'phone',
-  role: 'role',
   isEmailConfirmed: 'isEmailConfirmed',
   resetPasswordToken: 'resetPasswordToken',
   refreshToken: 'refreshToken',
   resetPasswordSentAt: 'resetPasswordSentAt',
   rememberCreatedAt: 'rememberCreatedAt',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  role: 'role'
 };
 
 exports.Prisma.OrderScalarFieldEnum = {
