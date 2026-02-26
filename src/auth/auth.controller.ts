@@ -52,7 +52,7 @@ export class AuthController {
     const { email } = body;
 
     if (!email) {
-      throw new BadRequestException('Email is required');
+      throw new BadRequestException('Email is required!');
     }
     return this.auth.logout(email);
   }
