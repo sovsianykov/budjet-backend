@@ -27,19 +27,21 @@ export class AuthController {
   }
 
   private accessCookie(): CookieOptions {
+    const isProduction = config.nodeEnv === 'production';
     return {
       httpOnly: true,
-      secure: config.nodeEnv === 'production',
-      sameSite: 'lax',
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
       maxAge: config.jwtAccessTokenExpiredTime * 1000,
     };
   }
 
   private refreshCookie(): CookieOptions {
+    const isProduction = config.nodeEnv === 'production';
     return {
       httpOnly: true,
-      secure: config.nodeEnv === 'production',
-      sameSite: 'lax',
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
       maxAge: config.jwtExpiredTime * 1000,
       path: '/api/v1/auth',
     };
