@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { TransactionsController } from './transactions.controller';
 import { TransactionsService } from './transactions.service';
 import { PrismaModule } from '../prisma/prisma.module';
-import { PrismaService } from '../prisma/prisma.service';
 import { JwtModule } from '@nestjs/jwt';
 import { config } from '../config';
 
@@ -15,6 +14,6 @@ import { config } from '../config';
     }),
   ],
   controllers: [TransactionsController],
-  providers: [TransactionsService, PrismaService],
+  providers: [TransactionsService],
 })
 export class TransactionsModule {}

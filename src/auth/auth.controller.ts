@@ -1,65 +1,111 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Get,
   Post,
-  UseGuards,
   Req,
+  Res,
+  UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import type { Request, Response } from 'express';
+import type { CookieOptions } from 'express';
+import { AuthService, JwtPayload } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { User } from '../generated/prisma';
-import { RefreshTokenDto } from './dto/refresh-token.dto';
-import { LogoutDto } from './dto/logout.dto';
 import { JwtAuthGuard } from './jwt.auth.guard';
+import { config } from '../config';
 
 @Controller('/auth')
 export class AuthController {
   constructor(private readonly auth: AuthService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Get('/users')
   getAllUsers(): Promise<User[]> {
     return this.auth.getAllUsers();
   }
 
+  private accessCookie(): CookieOptions {
+    return {
+      httpOnly: true,
+      secure: config.nodeEnv === 'production',
+      sameSite: 'lax',
+      maxAge: config.jwtAccessTokenExpiredTime * 1000,
+    };
+  }
+
+  private refreshCookie(): CookieOptions {
+    return {
+      httpOnly: true,
+      secure: config.nodeEnv === 'production',
+      sameSite: 'lax',
+      maxAge: config.jwtExpiredTime * 1000,
+      path: '/api/v1/auth',
+    };
+  }
+
   @Post('/sign_up')
-  register(@Body() registerDto: RegisterDto) {
-    return this.auth.register(registerDto);
+  async register(
+    @Body() dto: RegisterDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const result = await this.auth.register(dto);
+
+    res.cookie('accessToken', result.accessToken, this.accessCookie());
+    res.cookie('refreshToken', result.refreshToken, this.refreshCookie());
+
+    return { user: result.user };
   }
 
   @Post('/sign_in')
-  login(@Body() loginDto: LoginDto) {
-    return this.auth.login(loginDto);
+  async login(
+    @Body() dto: LoginDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const result = await this.auth.login(dto);
+
+    res.cookie('accessToken', result.accessToken, this.accessCookie());
+    res.cookie('refreshToken', result.refreshToken, this.refreshCookie());
+
+    return { user: result.user };
   }
 
   @Post('/refresh')
-  async refresh(@Body() body: RefreshTokenDto) {
-    const { token } = body;
-
+  async refresh(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const token = req.cookies?.refreshToken;
     if (!token) {
-      throw new BadRequestException('Refresh token is required');
+      throw new UnauthorizedException('Refresh token missing');
     }
 
-    return await this.auth.refresh(token);
+    const result = await this.auth.refresh(token);
+
+    res.cookie('accessToken', result.accessToken, this.accessCookie());
+    res.cookie('refreshToken', result.refreshToken, this.refreshCookie());
+
+    return { message: 'Tokens refreshed' };
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post('/logout')
-  async logout(@Body() body: LogoutDto) {
-    const { email } = body;
+  @UseGuards(JwtAuthGuard)
+  async logout(
+    @Req() req: Request & { user: JwtPayload },
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    await this.auth.logout(req.user.email);
 
-    if (!email) {
-      throw new BadRequestException('Email is required!');
-    }
-    return this.auth.logout(email);
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
+
+    return { message: 'Logged out successfully' };
   }
 
   @Get('/me')
   @UseGuards(JwtAuthGuard)
-  getMe(@Req() req) {
-    return this.auth.getMe(req.user.email as string);
+  async getMe(@Req() req: Request & { user: JwtPayload }) {
+    return this.auth.getMe(req.user.email);
   }
 }

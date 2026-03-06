@@ -1,5 +1,6 @@
 import {
   Injectable,
+  Logger,
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
@@ -10,8 +11,9 @@ import { CreateTransactionItemDto } from './dto/create-transaction-item.dto';
 
 @Injectable()
 export class TransactionsService {
+  private readonly logger = new Logger(TransactionsService.name);
+
   constructor(private readonly prisma: PrismaService) {}
-  // Create a transaction with validation
   async create(dto: CreateTransactionDto) {
     const user = await this.prisma.user.findUnique({
       where: { id: dto.userId },
@@ -21,7 +23,6 @@ export class TransactionsService {
       throw new NotFoundException(`User with ID ${dto.userId} not found`);
     }
 
-    // 🔹 merge duplicate products (sum quantities)
     const mergedItemsMap = new Map<string, number>();
 
     for (const item of dto.items) {
@@ -36,7 +37,6 @@ export class TransactionsService {
       }),
     );
 
-    // 🔹 check product existence
     const productIds = mergedItems.map((item) => item.productId);
 
     const products = await this.prisma.product.findMany({
@@ -69,7 +69,7 @@ export class TransactionsService {
         },
       });
     } catch (error) {
-      console.error('Error creating transaction:', error);
+      this.logger.error('Error creating transaction', error);
       throw new BadRequestException('Failed to create transaction');
     }
   }
@@ -101,7 +101,7 @@ export class TransactionsService {
     try {
       return await this.prisma.transaction.delete({ where: { id } });
     } catch (error) {
-      console.error('Error deleting transaction:', error);
+      this.logger.error('Error deleting transaction', error);
       throw new NotFoundException(`Transaction with ID ${id} not found`);
     }
   }
@@ -152,19 +152,12 @@ export class TransactionsService {
   async deleteAllTransactions() {
     try {
       await this.prisma.$transaction(async (tx) => {
-        // First, delete all transaction items to avoid foreign key conflicts
         await tx.transactionItem.deleteMany();
-
-        // Then, delete all transactions
         await tx.transaction.deleteMany();
       });
-
-      console.log(
-        'All transactions and transaction items have been deleted successfully.',
-      );
     } catch (error) {
-      console.error('Error while deleting transactions:', error);
-      throw new Error('Failed to delete transactions');
+      this.logger.error('Error while deleting transactions', error);
+      throw new BadRequestException('Failed to delete transactions');
     }
   }
 }

@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -r \"console\\\\.\" /Users/applestock/Documents/work/tutorials/budget/budget-backend/src --include=\"*.ts\" 2>/dev/null | grep -v node_modules)",
+      "Bash(grep -r \"import.*unused\" /Users/applestock/Documents/work/tutorials/budget/budget-backend/src --include=\"*.ts\" 2>/dev/null | head -10)",
+      "Bash(pnpm build 2>&1)",
+      "Bash(pnpm lint 2>&1)",
+      "Bash(npx eslint \"src/**/*.ts\" --ignore-pattern \"src/generated/**\" 2>&1)",
+      "Bash(pnpm add cookie-parser && pnpm add -D @types/cookie-parser)"
+    ]
+  }
+}

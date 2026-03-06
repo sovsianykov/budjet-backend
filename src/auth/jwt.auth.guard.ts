@@ -18,16 +18,10 @@ export class JwtAuthGuard implements CanActivate {
       .switchToHttp()
       .getRequest<Request & { user?: JwtPayload }>();
 
-    const authHeader = req.headers.authorization;
+    const token = this.extractToken(req);
 
-    if (!authHeader) {
-      throw new UnauthorizedException('Authorization header missing');
-    }
-
-    const [type, token] = authHeader.split(' ');
-
-    if (type !== 'Bearer' || !token) {
-      throw new UnauthorizedException('Invalid authorization format');
+    if (!token) {
+      throw new UnauthorizedException('Authentication required');
     }
 
     try {
@@ -40,5 +34,22 @@ export class JwtAuthGuard implements CanActivate {
     } catch {
       throw new UnauthorizedException('Invalid or expired token');
     }
+  }
+
+  private extractToken(req: Request): string | undefined {
+    const cookieToken = req.cookies?.accessToken;
+    if (cookieToken) {
+      return cookieToken;
+    }
+
+    const authHeader = req.headers.authorization;
+    if (authHeader) {
+      const [type, token] = authHeader.split(' ');
+      if (type === 'Bearer' && token) {
+        return token;
+      }
+    }
+
+    return undefined;
   }
 }

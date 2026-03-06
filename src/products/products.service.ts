@@ -1,5 +1,5 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service'; // путь к твоему PrismaService
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
@@ -13,7 +13,7 @@ export class ProductsService {
     });
 
     if (existing) {
-      throw new Error('Product with this name already exists');
+      throw new ConflictException('Product with this name already exists');
     }
 
     return this.prisma.product.create({

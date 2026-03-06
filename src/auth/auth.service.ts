@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
@@ -17,6 +18,8 @@ export interface JwtPayload {
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
@@ -62,17 +65,14 @@ export class AuthService {
   async login(loginDto: LoginDto) {
     const { email, password } = loginDto;
 
-    // Find user by email
     const user: User | null = await this.prisma.user.findUnique({
       where: { email: this.normalizeEmail(email) },
     });
 
-    // If user not found, throw error
     if (!user) {
       throw new BadRequestException('Invalid credentials');
     }
 
-    // Compare input password with stored hashed password
     const isPasswordValid = await bcrypt.compare(
       password,
       user.encryptedPassword,
@@ -81,21 +81,16 @@ export class AuthService {
       throw new BadRequestException('Invalid credentials');
     }
 
-    // Generate access and refresh tokens
     const { accessToken, refreshToken } = this.generateTokens(email);
 
-    // Store the new refresh token in the DB (consider hashing it for increased security)
     await this.prisma.user.update({
       where: { email },
       data: { refreshToken },
     });
 
-    // Remove sensitive data from user object before returning
-
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { encryptedPassword: _, ...userWithoutPassword } = user;
 
-    // Return user info and tokens to the client
     return {
       user: userWithoutPassword,
       accessToken,
@@ -109,38 +104,32 @@ export class AuthService {
 
   async refresh(token: string) {
     try {
-      // 1. Verify and decode the refresh token
-      const payload = this.verifyRefreshToken(token); // your method to verify JWT refresh token
+      const payload = this.verifyRefreshToken(token);
       const email = payload.email;
 
-      // 2. Find user by email
       const user = await this.prisma.user.findUnique({ where: { email } });
       if (!user) {
         throw new UnauthorizedException('Invalid refresh token');
       }
 
-      // 3. Check if refresh token matches the one in DB
       if (user.refreshToken !== token) {
         throw new UnauthorizedException('Invalid refresh token');
       }
 
-      // 4. Generate new tokens
       const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
         this.generateTokens(email);
 
-      // 5. Save new refresh token
       await this.prisma.user.update({
         where: { email },
         data: { refreshToken: newRefreshToken },
       });
 
-      // 6. Return new tokens
       return {
         accessToken: newAccessToken,
         refreshToken: newRefreshToken,
       };
     } catch (e) {
-      console.error(e as Error);
+      this.logger.error('Refresh token failed', e);
       throw new UnauthorizedException('Invalid refresh token');
     }
   }
@@ -150,7 +139,7 @@ export class AuthService {
       { email },
       {
         secret: config.jwtAccessTokenSecret,
-        expiresIn: config.jwtExpiredTime,
+        expiresIn: config.jwtAccessTokenExpiredTime,
       },
     );
 
@@ -187,10 +176,10 @@ export class AuthService {
         return payload as { email: string; iat: number; exp: number };
       }
 
-      throw new Error('Invalid token payload');
+      throw new UnauthorizedException('Invalid token payload');
     } catch (err) {
-      console.error(err);
-      throw new Error('Refresh token verification failed');
+      this.logger.error('Refresh token verification failed', err);
+      throw new UnauthorizedException('Refresh token verification failed');
     }
   }
 
@@ -210,8 +199,11 @@ export class AuthService {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { encryptedPassword, refreshToken, ...safeUser } = user;
 
-    console.log('user ', safeUser);
-
     return safeUser;
+  }
+
+  async getUserByEmail(email: string): Promise<User | null> {
+    const normalizedEmail = this.normalizeEmail(email);
+    return this.prisma.user.findUnique({ where: { email: normalizedEmail } });
   }
 }

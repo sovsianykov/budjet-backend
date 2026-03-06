@@ -13,4 +13,5 @@ export const config = {
     process.env.JWT_REFRESH_TOKEN_SECRET || 'refresh-secret',
   jwtAccessTokenSecret: process.env.JWT_ACCESS_TOKEN_SECRET || 'access-secret',
   jwtExpiredTime: 48 * 60 * 60,
+  jwtAccessTokenExpiredTime: 60 * 46,
 };
