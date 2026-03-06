@@ -6,7 +6,9 @@
       "Bash(pnpm build 2>&1)",
       "Bash(pnpm lint 2>&1)",
       "Bash(npx eslint \"src/**/*.ts\" --ignore-pattern \"src/generated/**\" 2>&1)",
-      "Bash(pnpm add cookie-parser && pnpm add -D @types/cookie-parser)"
+      "Bash(pnpm add cookie-parser && pnpm add -D @types/cookie-parser)",
+      "Bash(npm install --package-lock-only 2>&1)",
+      "Bash(git push)"
     ]
   }
 }

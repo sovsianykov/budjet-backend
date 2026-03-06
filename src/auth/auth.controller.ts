@@ -31,7 +31,7 @@ export class AuthController {
     return {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? 'none' : 'lax',
+      sameSite: 'none',
       maxAge: config.jwtAccessTokenExpiredTime * 1000,
     };
   }
@@ -41,7 +41,7 @@ export class AuthController {
     return {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? 'none' : 'lax',
+      sameSite: 'none',
       maxAge: config.jwtExpiredTime * 1000,
       path: '/api/v1/auth',
     };
